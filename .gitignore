@@ -1,0 +1,14 @@
+.agents/
+.codex/
+.codex_work/
+.firebase/
+.vercel/
+node_modules/
+outputs/
+proyecto-servicio-tecnico-inteligente/
+assets/brand-guide/
+assets/logo_bondicocina.mov
+
+.env
+.env.*
+*.log

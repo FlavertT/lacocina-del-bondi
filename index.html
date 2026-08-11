@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cotizador de Catering</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="public-mode">
+    <section class="intro-screen" id="introScreen" aria-label="Apertura">
+      <video class="intro-video" id="introVideo" poster="assets/bondi-brand-logo.png" autoplay muted playsinline>
+        <source src="assets/logo_bondicocina.mp4" type="video/mp4">
+      </video>
+      <div class="intro-actions">
+        <button class="primary-button" id="enterAppButton" type="button">Entrar</button>
+      </div>
+    </section>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-logo" src="assets/bondi-brand-logo.png" alt="La Cocina del Bondi">
+          <div>
+            <span class="brand-kicker">#RUTAALPALADAR · @Ezecocina</span>
+            <h1>La Cocina del Bondi</h1>
+            <p>Solicitud, armado de propuesta y respuesta comercial en una sola vista.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="newQuoteButton" type="button">Nueva solicitud</button>
+          <button class="primary-button" id="saveQuoteButton" type="button">Guardar</button>
+        </div>
+      </header>
+
+      <section class="auth-panel" id="authPanel" aria-label="Ingreso de usuario">
+        <div>
+          <span class="eyebrow">Acceso privado</span>
+          <strong id="authStatus">Modo local</strong>
+        </div>
+        <div class="auth-fields" id="authFields">
+          <input id="authEmail" type="email" autocomplete="email" placeholder="Email">
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="Contrasena">
+          <button class="secondary-button" id="loginButton" type="button">Ingresar</button>
+        </div>
+        <button class="ghost-button hidden" id="logoutButton" type="button">Salir</button>
+      </section>
+
+      <section class="workspace">
+        <aside class="sidebar" aria-label="Solicitudes guardadas">
+          <div class="section-heading">
+            <span>Solicitudes</span>
+            <strong id="savedCount">0</strong>
+          </div>
+          <div class="saved-list" id="savedList"></div>
+        </aside>
+
+        <section class="panel client-panel" aria-labelledby="clientTitle">
+          <div class="panel-header">
+            <div>
+              <span class="eyebrow">Cliente</span>
+              <h2 id="clientTitle">Datos del evento</h2>
+            </div>
+            <span class="status-pill" id="statusPill">Sin guardar</span>
+          </div>
+
+          <form class="form-grid" id="quoteForm">
+            <label>
+              Nombre y apellido
+              <input id="clientName" name="clientName" type="text" placeholder="Ej. Martina Gomez">
+            </label>
+            <label>
+              WhatsApp
+              <input id="clientPhone" name="clientPhone" type="tel" placeholder="Ej. 11 5555 5555">
+            </label>
+            <label>
+              Fecha
+              <input id="eventDate" name="eventDate" type="date">
+            </label>
+            <label>
+              Horario
+              <select id="eventTime" name="eventTime">
+                <option value="Mediodia">Mediodia</option>
+                <option value="Noche">Noche</option>
+                <option value="A definir">A definir</option>
+              </select>
+            </label>
+            <label>
+              Tipo de evento
+              <select id="eventType" name="eventType">
+                <option value="Cumpleanos">Cumpleanos</option>
+                <option value="Casamiento">Casamiento</option>
+                <option value="Corporativo">Corporativo</option>
+                <option value="Evento familiar">Evento familiar</option>
+                <option value="A definir">A definir</option>
+              </select>
+            </label>
+            <label>
+              Duracion del servicio
+              <select id="serviceDuration" name="serviceDuration">
+                <option value="5 hs">5 hs</option>
+                <option value="4 hs">4 hs</option>
+                <option value="6 hs">6 hs</option>
+                <option value="A definir">A definir</option>
+              </select>
+            </label>
+            <label class="span-2">
+              Lugar / salon
+              <input id="venue" name="venue" type="text" placeholder="Ej. Abasto, salon propio, quinta, domicilio">
+            </label>
+            <label>
+              Cocina disponible
+              <select id="kitchenAvailable" name="kitchenAvailable">
+                <option value="A confirmar">A confirmar</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+              </select>
+            </label>
+            <label>
+              Zona
+              <input id="eventZone" name="eventZone" type="text" placeholder="Ej. Abasto, CABA, GBA">
+            </label>
+            <label>
+              Adultos
+              <input id="adults" name="adults" min="0" type="number" value="80">
+            </label>
+            <label>
+              Menores 2 a 8
+              <input id="children" name="children" min="0" type="number" value="0">
+            </label>
+
+            <fieldset class="span-2 option-group">
+              <legend>Presupuestos a enviar</legend>
+              <p class="field-help">Podes marcar una o varias opciones. Si marcas mas de una, el cliente recibe ambos presupuestos para comparar.</p>
+              <label class="choice">
+                <input id="quotePremium" type="checkbox" checked>
+                <span>
+                  <strong>Degustacion premium</strong>
+                  <small>Recepcion fria, empanadas, mini burgers, crispy, bondiola y pizzetas.</small>
+                </span>
+              </label>
+              <label class="choice">
+                <input id="quotePernil" type="checkbox">
+                <span>
+                  <strong>Picada y pernil</strong>
+                  <small>Fiambres, sanguchitos, empanadas, pernil con panes y salsas.</small>
+                </span>
+              </label>
+              <label class="choice">
+                <input id="quoteCustom" type="checkbox">
+                <span>
+                  <strong>Personalizado</strong>
+                  <small>El cliente deja platos o preferencias en observaciones.</small>
+                </span>
+              </label>
+            </fieldset>
+
+            <fieldset class="span-2 option-group compact">
+              <legend>Extras y condiciones</legend>
+              <label class="check"><input id="sweetTable" type="checkbox" checked> Mesa dulce</label>
+              <label class="check"><input id="staff" type="checkbox" checked> Personal de salon y cocina</label>
+              <label class="check"><input id="foodTruck" type="checkbox"> Food truck / cocina movil</label>
+              <label class="check"><input id="invoice" type="checkbox"> Necesita factura</label>
+              <label class="check"><input id="vegetarian" type="checkbox"> Vegetarianos</label>
+              <label class="check"><input id="celiac" type="checkbox"> Celiacos / sin TACC</label>
+              <label class="check"><input id="kidsMenu" type="checkbox"> Menu infantil</label>
+            </fieldset>
+
+            <label class="span-2">
+              Observaciones del cliente
+              <textarea id="notes" name="notes" rows="5" placeholder="Platos pedidos, restricciones, dudas, horarios de servicio, modalidad del evento"></textarea>
+            </label>
+            <div class="span-2 public-submit">
+              <button class="primary-button" id="publicSubmitButton" type="button">Enviar solicitud</button>
+              <span id="publicSubmitStatus" aria-live="polite"></span>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel admin-panel" aria-labelledby="adminTitle">
+          <div class="panel-header">
+            <div>
+              <span class="eyebrow">Interno</span>
+              <h2 id="adminTitle">Armado de presupuesto</h2>
+            </div>
+            <span class="quote-id" id="quoteCode">000000</span>
+          </div>
+
+          <div class="pricing-grid">
+            <label>
+              Precio por persona
+              <input id="pricePerPerson" type="number" min="0" step="100" value="43000">
+            </label>
+            <label>
+              Mesa dulce
+              <input id="sweetTablePrice" type="number" min="0" step="100" value="3000">
+            </label>
+            <label>
+              Costo por mozo/cocina
+              <input id="staffUnitPrice" type="number" min="0" step="100" value="150000">
+            </label>
+            <label>
+              Costo total de personal
+              <input id="staffPrice" type="number" min="0" step="100" value="600000">
+            </label>
+            <label>
+              Food truck / cocina movil
+              <input id="foodTruckPrice" type="number" min="0" step="100" value="150000">
+            </label>
+            <label>
+              Otros extras
+              <input id="otherExtras" type="number" min="0" step="100" value="0">
+            </label>
+            <label>
+              Sena sugerida %
+              <input id="depositPercent" type="number" min="0" max="100" step="1" value="15">
+            </label>
+            <label>
+              IVA %
+              <input id="taxPercent" type="number" min="0" max="100" step="1" value="21">
+            </label>
+          </div>
+
+          <div class="totals" aria-live="polite">
+            <div>
+              <span>Invitados equivalentes</span>
+              <strong id="effectiveGuests">80</strong>
+            </div>
+            <div>
+              <span>Personal sugerido</span>
+              <strong id="staffCount">4</strong>
+            </div>
+            <div>
+              <span>Total estimado</span>
+              <strong id="grandTotal">$0</strong>
+            </div>
+            <div>
+              <span>Valor por adulto</span>
+              <strong id="adultPrice">$0</strong>
+            </div>
+            <div>
+              <span>Sena sugerida</span>
+              <strong id="depositAmount">$0</strong>
+            </div>
+            <div>
+              <span>Total con factura</span>
+              <strong id="taxedTotal">$0</strong>
+            </div>
+          </div>
+
+          <label class="internal-notes">
+            Notas internas
+            <textarea id="internalNotes" rows="4" placeholder="Ajustes comerciales, disponibilidad, vencimiento de la propuesta"></textarea>
+          </label>
+
+          <div class="action-row">
+            <button class="secondary-button" id="copyMessageButton" type="button">Copiar WhatsApp</button>
+            <a class="secondary-button" id="whatsappButton" href="#" target="_blank" rel="noreferrer">Abrir WhatsApp</a>
+            <button class="primary-button" id="printButton" type="button">Imprimir PDF</button>
+          </div>
+        </section>
+
+        <section class="panel preview-panel" aria-labelledby="previewTitle">
+          <div class="panel-header">
+            <div>
+              <span class="eyebrow">Salida</span>
+              <h2 id="previewTitle">Presupuesto listo</h2>
+            </div>
+            <span class="status-pill positive" id="copyStatus">Listo</span>
+          </div>
+
+          <article class="quote-preview" id="quotePreview"></article>
+
+          <div class="message-box">
+            <label for="messagePreview">Mensaje para WhatsApp</label>
+            <textarea id="messagePreview" rows="9" readonly></textarea>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
