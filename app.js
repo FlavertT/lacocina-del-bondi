@@ -289,7 +289,7 @@ function buildPreview(data, totals) {
       <div class="preview-head">
         <div>
           <h3>${hasMultipleMenus ? "Opciones de catering" : "Presupuesto de catering"}</h3>
-          <p>${hasMultipleMenus ? "Presupuestos solicitados" : escapeHtml(menu.title)} para ${numberFormatter.format(totals.adults)} adultos${totals.children ? ` y ${numberFormatter.format(totals.children)} menores` : ""}.</p>
+          <p>${hasMultipleMenus ? "Presupuestos solicitados" : escapeHtml(menu.title)} para ${numberFormatter.format(totals.adults)} adultos${totals.children ? ` y ${numberFormatter.format(totals.children)} menores de 2 a 8 años` : ""}.</p>
         </div>
         <div class="preview-meta">
           <strong>Nro. ${escapeHtml(data.id)}</strong>
@@ -385,11 +385,11 @@ function buildMessage(data, totals) {
   const lines = [
     `Hola ${data.clientName || ""}, te paso la propuesta para tu evento:`,
     "",
-    `Fecha: ${formatDate(data.eventDate)} (${data.eventTime || "A definir"})`,
+    `Fecha del evento: ${formatDate(data.eventDate)} (${data.eventTime || "A definir"})`,
     `Tipo de evento: ${data.eventType || "A definir"}`,
     `Lugar: ${data.venue || "A definir"} - Zona: ${data.eventZone || "A definir"}`,
     `Cocina disponible: ${data.kitchenAvailable || "A confirmar"}`,
-    `Invitados: ${numberFormatter.format(totals.adults)} adultos${totals.children ? ` + ${numberFormatter.format(totals.children)} menores` : ""}`,
+    `Invitados: ${numberFormatter.format(totals.adults)} adultos${totals.children ? ` + ${numberFormatter.format(totals.children)} menores de 2 a 8 años` : ""}`,
     hasMultipleMenus ? `Menus cotizados: ${optionKeys.map((key) => menuPresets[key].title).join(" / ")}` : `Menu: ${menu.title}`,
     `Servicio: ${data.serviceDuration || "5 hs"}${data.staff ? ` con ${totals.staffCount} personas de salon/cocina` : ""}`,
     "",
@@ -626,7 +626,7 @@ async function submitPublicRequest() {
   const requiredFields = [
     ["clientName", "nombre"],
     ["clientPhone", "WhatsApp"],
-    ["eventDate", "fecha"],
+    ["eventDate", "fecha del evento"],
     ["venue", "lugar"]
   ];
   const missing = requiredFields.find(([field]) => !String(data[field] || "").trim());
