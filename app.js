@@ -102,8 +102,6 @@ const workspace = document.querySelector(".workspace");
 const topbarActions = document.querySelector(".topbar-actions");
 const publicSubmitButton = document.querySelector("#publicSubmitButton");
 const publicSubmitStatus = document.querySelector("#publicSubmitStatus");
-const publicWhatsAppButton = document.querySelector("#publicWhatsAppButton");
-const businessWhatsAppNumber = "5492215252925";
 
 const firebaseState = {
   enabled: false,
@@ -411,37 +409,6 @@ function buildMessage(data, totals) {
   return lines.join("\n");
 }
 
-function buildPublicNotificationMessage(data) {
-  const optionKeys = quoteMenuKeys(data);
-  const menuNames = optionKeys.map((key) => menuPresets[key].title).join(" / ");
-  return [
-    "Nueva solicitud de presupuesto desde la web",
-    "",
-    `Cliente: ${data.clientName || "A definir"}`,
-    `WhatsApp: ${data.clientPhone || "A definir"}`,
-    `Fecha del evento: ${formatDate(data.eventDate)} (${data.eventTime || "A definir"})`,
-    `Tipo de evento: ${data.eventType || "A definir"}`,
-    `Lugar: ${data.venue || "A definir"}`,
-    `Zona: ${data.eventZone || "A definir"}`,
-    `Invitados: ${numberFormatter.format(toNumber(data.adults))} adultos${toNumber(data.children) ? ` + ${numberFormatter.format(toNumber(data.children))} menores de 2 a 8 años` : ""}`,
-    `Menus solicitados: ${menuNames || "A definir"}`,
-    data.notes ? `Observaciones: ${data.notes}` : ""
-  ].filter(Boolean).join("\n");
-}
-
-function showPublicWhatsAppNotice(data) {
-  if (!publicWhatsAppButton) return;
-  const message = encodeURIComponent(buildPublicNotificationMessage(data));
-  publicWhatsAppButton.href = `https://wa.me/${businessWhatsAppNumber}?text=${message}`;
-  publicWhatsAppButton.classList.remove("hidden");
-}
-
-function hidePublicWhatsAppNotice() {
-  if (!publicWhatsAppButton) return;
-  publicWhatsAppButton.href = "#";
-  publicWhatsAppButton.classList.add("hidden");
-}
-
 function buildMessageTotals(data, totals) {
   const optionKeys = quoteMenuKeys(data);
   if (optionKeys.length === 1) {
@@ -654,7 +621,6 @@ async function saveQuote(data) {
 }
 
 async function submitPublicRequest() {
-  hidePublicWhatsAppNotice();
   publicSubmitStatus.textContent = "Revisando solicitud...";
   const data = readForm();
   const requiredFields = [
@@ -680,12 +646,11 @@ async function submitPublicRequest() {
       publicSubmitButton.disabled = true;
       publicSubmitStatus.textContent = "Enviando...";
       await savePublicRequestViaRest(data);
+      sendWhatsAppNotification(data);
       startNewQuote();
-      showPublicWhatsAppNotice(data);
-      publicSubmitStatus.textContent = "Solicitud enviada. Aviso listo para mandar por WhatsApp.";
+      publicSubmitStatus.textContent = "Solicitud enviada. Te vamos a responder por WhatsApp.";
     } catch (error) {
       console.error("Public REST request failed", error);
-      hidePublicWhatsAppNotice();
       publicSubmitStatus.textContent = "No se pudo enviar. Falta publicar reglas o terminar Firebase.";
     } finally {
       publicSubmitButton.disabled = false;
@@ -702,17 +667,40 @@ async function submitPublicRequest() {
       source: "public_form",
       createdAt: new Date().toISOString()
     });
+    sendWhatsAppNotification(data);
     startNewQuote();
-    showPublicWhatsAppNotice(data);
-    publicSubmitStatus.textContent = "Solicitud enviada. Aviso listo para mandar por WhatsApp.";
+    publicSubmitStatus.textContent = "Solicitud enviada. Te vamos a responder por WhatsApp.";
   } catch (error) {
     console.error("Public request failed", error);
-    hidePublicWhatsAppNotice();
     publicSubmitStatus.textContent = error.code === "permission-denied"
       ? "Falta publicar las reglas de Firestore para recibir solicitudes."
       : "No se pudo enviar. Proba de nuevo en unos minutos.";
   } finally {
     publicSubmitButton.disabled = false;
+  }
+}
+
+async function sendWhatsAppNotification(data) {
+  const optionKeys = quoteMenuKeys(data);
+  const payload = {
+    ...data,
+    menuNames: optionKeys.map((key) => menuPresets[key].title).join(" / ")
+  };
+
+  try {
+    const response = await fetch("/api/send-budget-notification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      console.warn("WhatsApp notification failed");
+    }
+  } catch (error) {
+    console.warn("WhatsApp notification unavailable", error);
   }
 }
 
@@ -787,7 +775,6 @@ function renderSavedList() {
 function startNewQuote() {
   state.activeId = null;
   state.draftId = createQuoteId();
-  hidePublicWhatsAppNotice();
   form.reset();
   element("adults").value = 80;
   element("children").value = 0;

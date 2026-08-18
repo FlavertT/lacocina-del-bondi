@@ -11,4 +11,6 @@ assets/logo_bondicocina.mov
 
 .env
 .env.*
+!.env.example
+!functions/.env.example
 *.log

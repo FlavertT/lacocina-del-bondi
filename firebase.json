@@ -13,8 +13,21 @@
       "assets/logo_bondicocina.mov",
       "outputs/**",
       "proyecto-servicio-tecnico-inteligente/**",
-      "node_modules/**"
+      "node_modules/**",
+      "functions/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/send-budget-notification",
+        "function": {
+          "functionId": "sendBudgetNotification",
+          "region": "us-central1"
+        }
+      }
     ]
+  },
+  "functions": {
+    "source": "functions"
   },
   "firestore": {
     "rules": "firestore.rules",
