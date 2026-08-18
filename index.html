@@ -32,19 +32,6 @@
         </div>
       </header>
 
-      <section class="auth-panel" id="authPanel" aria-label="Ingreso de usuario">
-        <div>
-          <span class="eyebrow">Acceso privado</span>
-          <strong id="authStatus">Modo local</strong>
-        </div>
-        <div class="auth-fields" id="authFields">
-          <input id="authEmail" type="email" autocomplete="email" placeholder="Email">
-          <input id="authPassword" type="password" autocomplete="current-password" placeholder="Contrasena">
-          <button class="secondary-button" id="loginButton" type="button">Ingresar</button>
-        </div>
-        <button class="ghost-button hidden" id="logoutButton" type="button">Salir</button>
-      </section>
-
       <section class="workspace">
         <aside class="sidebar" aria-label="Solicitudes guardadas">
           <div class="section-heading">
@@ -172,6 +159,7 @@
             <div class="span-2 public-submit">
               <button class="primary-button" id="publicSubmitButton" type="button">Enviar solicitud</button>
               <span id="publicSubmitStatus" aria-live="polite"></span>
+              <a class="secondary-button hidden" id="publicWhatsAppButton" href="#" target="_blank" rel="noreferrer">Avisar por WhatsApp</a>
             </div>
           </form>
         </section>
@@ -275,6 +263,19 @@
             <textarea id="messagePreview" rows="9" readonly></textarea>
           </div>
         </section>
+      </section>
+
+      <section class="auth-panel" id="authPanel" aria-label="Ingreso de usuario">
+        <div>
+          <span class="eyebrow">Acceso privado</span>
+          <strong id="authStatus">Modo local</strong>
+        </div>
+        <div class="auth-fields" id="authFields">
+          <input id="authEmail" type="email" autocomplete="email" placeholder="Email">
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="Contrasena">
+          <button class="secondary-button" id="loginButton" type="button">Ingresar</button>
+        </div>
+        <button class="ghost-button hidden" id="logoutButton" type="button">Salir</button>
       </section>
     </main>
 

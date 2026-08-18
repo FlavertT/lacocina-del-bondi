@@ -188,7 +188,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: -4px 0 18px;
+  margin: 18px 0 0;
   border: 1px solid rgba(234, 212, 161, 0.9);
   border-radius: 8px;
   padding: 12px;
@@ -279,6 +279,10 @@ h1 {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.public-submit .secondary-button {
+  text-decoration: none;
 }
 
 .public-submit span {
